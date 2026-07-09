@@ -7,15 +7,15 @@ replicaCount: 2
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: nginx
+  repository: todo-app
   # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
+  pullPolicy: Never
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "v1"
 
 service:
-  type: ClusterIP
-  port: 80
+  type: NodePort
+  port: 3000
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 # This is to override the chart name.
@@ -25,7 +25,7 @@ fullnameOverride: ""
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
   # Specifies whether a service account should be created.
-  create: true
+  create: false
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
   # Annotations to add to the service account.
@@ -33,6 +33,12 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template.
   name: ""
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -126,7 +132,280 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+# This is to setup
+ _____              _           ____            _     _
+|_   _| __ __ _ ___| |__  _   _/ ___|  __ _ ___| |__ (_)
+  | || '__/ _` / __| '_ \| | | \___ \ / _` / __| '_ \| |
+  | || | | (_| \__ \ | | | |_| |___) | (_| \__ \ | | | |
+  |_||_|  \__,_|___/_| |_|\__, |____/ \__,_|___/_| |_|_|
+                          |___/
+                     ..'          sashi@Alexandras-MacBook-Air
+                 ,xNMM.           ----------------------------
+               .OMMMMo            OS: macOS Tahoe 26.5.1 (25F80) arm64
+               lMM"               Host: MacBook Air (15-inch, M5, 2026)
+     .;loddo:.  .olloddol;.       Kernel: Darwin 25.5.0
+   cKMMMMMMMMMMNWMMMMMMMMMM0:     Uptime: 10 days, 12 hours, 26 mins
+ .KMMMMMMMMMMMMMMMMMMMMMMMWd.     Days together: 51 days
+ XMMMMMMMMMMMMMMMMMMMMMMMX.       Packages: 108 (brew), 5 (brew-cask)
+;MMMMMMMMMMMMMMMMMMMMMMMM:        Shell: zsh 5.9
+:MMMMMMMMMMMMMMMMMMMMMMMM:        Display (Color LCD): 3420x2214 @ 2x in 15", 60 Hz [Built-in]
+.MMMMMMMMMMMMMMMMMMMMMMMMX.       WM: Quartz Compositor 1.600.0
+ kMMMMMMMMMMMMMMMMMMMMMMMMWd.     WM Theme: Multicolor (Dark)
+ 'XMMMMMMMMMMMMMMMMMMMMMMMMMMk    Theme: Liquid Glass
+  'XMMMMMMMMMMMMMMMMMMMMMMMMK.    Font: .AppleSystemUIFont [System], Helvetica [User]
+    kMMMMMMMMMMMMMMMMMMMMMMd      Cursor: Fill - Black, Outline - White (32px)
+     ;KMMMMMMMWXXWMMMMMMMk.       Terminal: iTerm 3.6.11
+       "cooc*"    "*coo'"         Terminal Font: PTMono-Regular (12pt)
+                                  CPU: Apple M5 (10) @ 4.46 GHz
+                                  GPU: Apple M5 (10) @ 1.58 GHz [Integrated]
+                                  Memory: 13.88 GiB / 16.00 GiB (87%)
+                                  Swap: 3.96 GiB / 5.00 GiB (79%)
+                                  Disk (/): 286.77 GiB / 460.38 GiB (62%) - apfs [Read-only]
+                                  Disk (/Volumes/boringNotch 2.7.3): 20.23 MiB / 32.51 MiB (62%) - apfs [External, Read-only]
+                                  Local IP (en0): 172.20.10.2/28
+                                  Battery (bq40z651): 56% (4 hours, 32 mins remaining) [Discharging]
+                                  Locale: bg_BG.UTF-8
+
+
+
+
+ _________________________________________
+/ "It could be that Walter's horse has    \
+| wings" does not imply that there is any |
+| such animal as Walter's horse, only     |
+| that there could be; but "Walter's      |
+| horse is a thing which could have       |
+| wings" does imply Walter's horse's      |
+| existence. But the conjunction          |
+| "Walter's horse exists, and it could be |
+| that Walter's horse has wings" still    |
+| does not imply "Walter's horse is a     |
+| thing that could have wings", for       |
+| perhaps it can only be that Walter's    |
+| horse has wings by Walter having a      |
+| different horse. Nor does "Walter's     |
+| horse is a thing which could have       |
+| wings" conversely imply "It could be    |
+| that Walter's horse has wings"; for it  |
+| might be that Walter's horse could only |
+| have wings by not being Walter's horse. |
+|                                         |
+| I would deny, though, that the formula  |
+| [Necessarily if some x has property P   |
+| then some x has property P] expresses a |
+| logical law, since P(x) could stand     |
+| for, let us say "x is a better logician |
+| than I am", and the statement "It is    |
+| necessary that if someone is a better   |
+| logician than I am then someone is a    |
+| better logician than I am" is false     |
+| because there need not have been any    |
+| me.                                     |
+|                                         |
+\ -- A.N. Prior, "Time and Modality"      /
+ -----------------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+➜  ~ ssh alexandra@192.168.64.12
+alexandra@192.168.64.12's password:
+Permission denied, please try again.
+alexandra@192.168.64.12's password:
+Welcome to Ubuntu 26.04 LTS (GNU/Linux 7.0.0-27-generic aarch64)
+
+ * Documentation:  https://docs.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+Expanded Security Maintenance for Applications is not enabled.
+
+40 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+Last login: Thu Jul  9 14:26:11 2026 from 192.168.64.1
+alexandra@alexandra-QEMU-Virtual-Machine:~$ ls
+Desktop    Downloads  Pictures  Templates  argocd-app.yaml  minikube-linux-amd64  snap
+Documents  Music      Public    Videos     curl_response    my-webapp             values.yaml
+alexandra@alexandra-QEMU-Virtual-Machine:~$ cd my-webapp/
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ eval $(minikube docker-env)
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ ls
+webapp
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cd webapp/
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp/webapp$ cd ..
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cd ~/my-webapp
+mkdir -p app/public
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ ls
+app  webapp
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cd app
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp/app$ ls
+public
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp/app$ touch package.json
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp/app$ cat > app/package.json << 'EOF'
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+EOF
+-bash: app/package.json: No such file or directory
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp/app$ cd ..
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cat > app/package.json << 'EOF'
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+EOF
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cat > app/server.js << 'EOF'
+const express = require('express');
+const app = express();
+app.use(express.json());
+app.use(express.static('public'));
+
+let todos = [
+  { id: 1, text: 'Learn Kubernetes', done: false },
+  { id: 2, text: 'Deploy ArgoCD', done: true },
+  { id: 3, text: 'Build a web app', done: false }
+];
+let nextId = 4;
+
+app.get('/api/todos', (req, res) => res.json(todos));
+
+app.post('/api/todos', (req, res) => {
+  const todo = { id: nextId++, text: req.body.text, done: false };
+  todos.push(todo);
+  res.json(todo);
+});
+
+app.patch('/api/todos/:id', (req, res) => {
+  const todo = todos.find(t => t.id === parseInt(req.params.id));
+  if (!todo) return res.status(404).json({ error: 'Not found' });
+  todo.done = !todo.done;
+  res.json(todo);
+});
+
+app.delete('/api/todos/:id', (req, res) => {
+  todos = todos.filter(t => t.id !== parseInt(req.params.id));
+  res.json({ success: true });
+});
+
+app.listen(3000, () => console.log('Todo app running on port 3000'));
+EOF
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cat > app/public/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
+    .container { background: white; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); width: 100%; max-width: 500px; padding: 32px; }
+    h1 { font-size: 2rem; color: #1a1a2e; margin-bottom: 8px; }
+    .subtitle { color: #666; margin-bottom: 28px; font-size: 0.9rem; }
+    .input-row { display: flex; gap: 10px; margin-bottom: 28px; }
+    input { flex: 1; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; outline: none; transition: border-color 0.2s; }
+    input:focus { border-color: #6c63ff; }
+    button.add-btn { background: #6c63ff; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background 0.2s; }
+    button.add-btn:hover { background: #574fd6; }
+    .stats { display: flex; gap: 16px; margin-bottom: 20px; }
+    .stat { background: #f8f9ff; border-radius: 10px; padding: 10px 16px; flex: 1; text-align: center; }
+    .stat-num { font-size: 1.5rem; font-weight: 700; color: #6c63ff; }
+    .stat-label { font-size: 0.75rem; color: #888; }
+    .todo-list { list-style: none; }
+    .todo-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+    .todo-item:last-child { border-bottom: none; }
+    .todo-text { flex: 1; font-size: 1rem; color: #333; transition: all 0.2s; }
+    .todo-text.done { text-decoration: line-through; color: #aaa; }
+    .check-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #6c63ff; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; flex-shrink: 0; }
+    .check-btn.done { background: #6c63ff; color: white; }
+    .del-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1.2rem; transition: color 0.2s; }
+    .del-btn:hover { color: #ff4d4d; }
+    .empty { text-align: center; color: #bbb; padding: 30px 0; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Todo App</h1>
+    <p class="subtitle">Deployed with ArgoCD on Kubernetes</p>
+    <div class="input-row">
+      <input id="todoInput" type="text" placeholder="Add a new task..." />
+      <button class="add-btn" onclick="addTodo()">Add</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="totalCount">0</div><div class="stat-label">Total</div></div>
+      <div class="stat"><div class="stat-num" id="doneCount">0</div><div class="stat-label">Done</div></div>
+      <div class="stat"><div class="stat-num" id="pendingCount">0</div><div class="stat-label">Pending</div></div>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+  </div>
+  <script>
+    async function fetchTodos() {
+      const res = await fetch('/api/todos');
+      const todos = await res.json();
+      renderTodos(todos);
+    }
+    function renderTodos(todos) {
+      const list = document.getElementById('todoList');
+      document.getElementById('totalCount').textContent = todos.length;
+      document.getElementById('doneCount').textContent = todos.filter(t => t.done).length;
+      document.getElementById('pendingCount').textContent = todos.filter(t => !t.done).length;
+      if (todos.length === 0) {
+        list.innerHTML = '<div class="empty">No tasks yet. Add one above!</div>';
+        return;
+      }
+      list.innerHTML = todos.map(t => `
+        <li class="todo-item">
+          <button class="check-btn ${t.done ? 'done' : ''}" onclick="toggleTodo(${t.id})">${t.done ? '✓' : ''}</button>
+          <span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span>
+          <button class="del-btn" onclick="deleteTodo(${t.id})">✕</button>
+        </li>
+      `).join('');
+    }
+    async function addTodo() {
+      const input = document.getElementById('todoInput');
+      if (!input.value.trim()) return;
+      await fetch('/api/todos', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ text: input.value.trim() }) });
+      input.value = '';
+      fetchTodos();
+    }
+    async function toggleTodo(id) {
+      await fetch(`/api/todos/${id}`, { method: 'PATCH' });
+      fetchTodos();
+    }
+    async function deleteTodo(id) {
+      await fetch(`/api/todos/${id}`, { method: 'DELETE' });
+      fetchTodos();
+    }
+    document.getElementById('todoInput').addEventListener('keypress', e => { if (e.key === 'Enter') addTodo(); });
+    fetchTodos();
+  </script>
+</body>
+</html>
+EOF
+alexandra@alexandra-QEMU-Virtual-Machine:~/my-webapp$ cat > app/Dockerfile << 'EOF'
+FROM node:18-alpine
+WORKDIR /app
+COPY package.json .
+RUN npm install
+  GNU nano 8.7.1                                                 values.yaml *
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-p>
 livenessProbe:
   httpGet:
     path: /
@@ -136,29 +415,34 @@ readinessProbe:
     path: /
     port: http
 
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+# This section is for setting up autoscaling
 
-# Additional volumes on the output Deployment definition.
-volumes: []
-  # - name: foo
-  #   secret:
-  #     secretName: mysecret
-  #     optional: false
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-  # - name: foo
-  #   mountPath: "/etc/foo"
-  #   readOnly: true
 
-nodeSelector: {}
 
-tolerations: []
 
-affinity: {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+^G Help         ^O Write Out    ^F Where Is     ^K Cut          ^T Execute      ^C Location     M-U Undo        M-A Set Mark
+^X Exit         ^R Read File    ^\ Replace      ^U Paste        ^J Justify      ^/ Go To Line   M-E Redo        M-6 Copy
+
