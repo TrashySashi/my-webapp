@@ -41,3 +41,6 @@ readinessProbe:
   httpGet:
     path: /
     port: http
+
+httpRoute:
+  enabled: false
